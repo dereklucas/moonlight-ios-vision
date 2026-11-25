@@ -71,13 +71,14 @@ def Xform "Root"
         def Shader "UnlitPreviewSurface"
         {
             uniform token info:id = "ND_realitykit_unlit_surfaceshader"
+            bool inputs:applyPostProcessToneMap = 0
             color3f inputs:color.connect = </Root/SBSMaterial/GeometrySwitchCameraIndex.outputs:out>
             bool inputs:hasPremultipliedAlpha
             float inputs:opacity
             float inputs:opacityThreshold
             token outputs:out
-            float2 ui:nodegraph:node:pos = (289.84146, -36.195312)
-            int ui:nodegraph:node:stackingOrder = 206
+            float2 ui:nodegraph:node:pos = (297.65005, 171.00781)
+            int ui:nodegraph:node:stackingOrder = 209
         }
     }
 }

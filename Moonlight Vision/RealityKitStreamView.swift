@@ -59,7 +59,7 @@ struct RealityKitStreamView: View {
     @State var texture: TextureResource
     @State var screen: ModelEntity = ModelEntity()
 
-    @State var videoMode: VideoMode = .standard2D
+    @State var videoMode: VideoMode = .debug
 
     @State private var surfaceMaterial: ShaderGraphMaterial?
 
@@ -98,17 +98,26 @@ struct RealityKitStreamView: View {
                         )
                     }
 
-                    if videoMode == .sideBySide3D {
-                        screen.model?.materials = [surfaceMaterial!]
-                    } else {
+                    switch videoMode {
+                    case .standard2D:
                         screen.model?.materials = [UnlitMaterial(texture: self.texture)]
+                    case .sideBySide3D:
+                        screen.model?.materials = [surfaceMaterial!]
+                    case .debug:
+                        screen.model?.materials = [UnlitMaterial(color: .purple)]
                     }
 
-                    screen.collision = CollisionComponent(shapes: [
-                        colBox
-                    ], mode: .colliding)
+//                    screen.collision = CollisionComponent(shapes: [
+//                        colBox
+//                    ], mode: .colliding)
                     screen.components.set(InputTargetComponent())
+                    screen.position.z = -0.2
                     content.add(screen)
+
+                    let debugBoxMesh = MeshResource.generateBox(width: 0.2, height: 0.2 * aspectRatio, depth: 0.2)
+                    let debugBox = ModelEntity(mesh: debugBoxMesh, materials: [SimpleMaterial(color: .purple, isMetallic: false)])
+                    debugBox.position.z = 0
+                    content.add(debugBox)
                 } update: { content in
                     let mesh = try! RealityKitStreamView.generateCurvedPlane(width: MAX_WIDTH_METERS, aspectRatio: aspectRatio, resulotion: (50,50), curveMagnitude: viewModel.streamSettings.realitykitRendererCurvature * curveAnimationMultiplier)
                     let size = content.convert(proxy.frame(in: .local), from: .local, to: .scene)
@@ -158,10 +167,14 @@ struct RealityKitStreamView: View {
                 HStack {
                     Button("3D Mode", systemImage: videoMode == .standard2D ? "rectangle" : "rectangle.split.2x1") {
                         videoMode = videoMode == .standard2D ? .sideBySide3D : .standard2D
-                        if videoMode == .sideBySide3D {
+                        
+                        switch videoMode {
+                        case .standard2D:
+                            screen.model?.materials = [UnlitMaterial(texture: self.texture)]
+                        case .sideBySide3D:
                             screen.model?.materials = [surfaceMaterial!]
-                        } else {
-                            screen.model?.materials = [UnlitMaterial(texture: texture)]
+                        case .debug:
+                            screen.model?.materials = [UnlitMaterial(color: .purple)]
                         }
                     }
                 }

@@ -23,21 +23,21 @@ struct MoonlightVisionApp: SwiftUI.App {
         .windowResizability(.contentSize)
         
         WindowGroup(id: "realitykitStreamingWindow", for: StreamConfiguration.self) { streamConfig in
-            @State var lol: Bool = false
+//            @State var lol: Bool = false
             if streamConfig.wrappedValue != nil {
                 RealityKitStreamView(streamConfig: Binding(
                     get: { streamConfig.wrappedValue! },
                     set: { n in streamConfig.wrappedValue = n }
                 ))
-                .onDisappear {
-                    //print("SteamWindowClosedOutside")
-                }
+//                .onDisappear {
+//                    //print("SteamWindowClosedOutside")
+//                }
                     .environmentObject(appDelegate.mainViewModel)
-                    .onChange(of: appDelegate.mainViewModel) {
-                        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-                                                let geometryRequest = UIWindowScene.GeometryPreferences.Vision(resizingRestrictions: .uniform)
-                                                windowScene.requestGeometryUpdate(geometryRequest)
-                    }
+//                    .onChange(of: appDelegate.mainViewModel) {
+//                        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+//                                                let geometryRequest = UIWindowScene.GeometryPreferences.Vision(resizingRestrictions: .uniform)
+//                                                windowScene.requestGeometryUpdate(geometryRequest)
+//                    }
 //                    .onAppear {
 //                        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
 //                        let geometryRequest = UIWindowScene.GeometryPreferences.Vision(resizingRestrictions: .uniform)
@@ -48,9 +48,10 @@ struct MoonlightVisionApp: SwiftUI.App {
                 Text("No computer selected")
             }
         }
-        .windowStyle(.volumetric)
-        .defaultSize(width: 2, height: 2, depth: 2, in: .meters)
-//        .windowResizability(.contentSize)
+        .windowStyle(.plain)
+//        .windowStyle(.volumetric)
+//        .defaultSize(width: 2, height: 2, depth: 0.001, in: .meters)
+        .windowResizability(.contentSize)
         
         WindowGroup(id: "classicStreamingWindow", for: StreamConfiguration.self) { streamConfig in
             if streamConfig.wrappedValue != nil {
